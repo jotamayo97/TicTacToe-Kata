@@ -16,4 +16,35 @@ public class Game
 
         _board[index] = player;
     }
+
+    public Player? GetWinner()
+    {
+        int[,] winningPositions =
+        {
+            { 0, 1, 2 }, 
+            { 3, 4, 5 },
+            { 6, 7, 8 },
+            { 0, 3, 6 },
+            { 1, 4, 7 },
+            { 2, 5, 8 },
+            { 0, 4, 8 },
+            { 2, 4, 6 }
+        };
+
+        for (int i = 0; i < winningPositions.GetLength(0); i++)
+        {
+            var a = winningPositions[i, 0];
+            var b = winningPositions[i, 1];
+            var c = winningPositions[i, 2];
+
+            if (_board[a] != null &&
+                _board[a] == _board[b] &&
+                _board[a] == _board[c])
+            {
+                return _board[a];
+            }
+        }
+
+        return null;
+    }
 }

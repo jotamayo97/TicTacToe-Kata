@@ -37,4 +37,16 @@ public class GameShould
             game.Play(Player.O, 0, 0)
         );
     }
+
+    [Fact]
+    public void DetectWinner_WhenPlayerHasThreeInARow()
+    {
+        var game = new Game();
+
+        game.Play(Player.X, 0, 0);
+        game.Play(Player.X, 0, 1);
+        game.Play(Player.X, 0, 2);
+
+        Assert.Equal(Player.X, game.GetWinner());
+    }
 }
