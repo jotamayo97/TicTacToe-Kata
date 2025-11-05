@@ -10,6 +10,10 @@ public class Game
     public void Play(Player player, int row, int col)
     {
         var index = row * 3 + col;
+
+        if (_board[index] != null)
+            throw new InvalidOperationException("Cell already occupied");
+
         _board[index] = player;
     }
 }
