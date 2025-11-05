@@ -4,15 +4,22 @@
 public class Game
 {
     private readonly Player?[,] _board = new Player?[3, 3];
+    public Player CurrentPlayer { get; private set; } = Player.X;
 
     public Player?[,] GetBoard() => _board;
 
     public void Play(Player player, int row, int col)
     {
+        if (player != CurrentPlayer)
+            throw new InvalidOperationException("Not this player's turn");
+
         if (_board[row, col] != null)
             throw new InvalidOperationException("Cell already occupied");
 
         _board[row, col] = player;
+        
+        if (GetWinner() == null && !IsDraw())
+            CurrentPlayer = CurrentPlayer == Player.X ? Player.O : Player.X;
     }
 
     public Player? GetWinner()

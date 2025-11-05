@@ -67,4 +67,28 @@ public class GameShould
 
         Assert.True(game.IsDraw());
     }
+    
+    [Fact]
+    public void AlternateTurnsBetweenPlayers()
+    {
+        var game = new Game();
+
+        Assert.Equal(Player.X, game.CurrentPlayer);
+
+        game.Play(Player.X, 0, 0);
+        Assert.Equal(Player.O, game.CurrentPlayer);
+
+        game.Play(Player.O, 0, 1);
+        Assert.Equal(Player.X, game.CurrentPlayer);
+    }
+
+    [Fact]
+    public void NotAllowPlayingOutOfTurn()
+    {
+        var game = new Game();
+        
+        Assert.Throws<InvalidOperationException>(() =>
+            game.Play(Player.O, 0, 0)
+        );
+    }
 }
