@@ -15,16 +15,15 @@ public class GameShould
 
         Assert.All(board, cell => Assert.Null(cell));
     }
-    
+
     [Fact]
     public void AllowPlayerToPlaceSymbol()
     {
         var game = new Game();
-        game.Play("X", 0, 0);
+        game.Play(Player.X, 0, 0);
 
         var board = game.GetBoard();
 
-        Assert.Equal("X", board[0]);
+        Assert.Equal(Player.X, board[0]);
     }
-    
 }
