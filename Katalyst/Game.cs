@@ -3,29 +3,25 @@
 
 public class Game
 {
-    private readonly Player?[,] _board = new Player?[3, 3];
-    public Player CurrentPlayer { get; private set; } = Player.X;
+    private readonly Board _board = new();
     private bool _isGameOver;
 
-    public Player?[,] GetBoard() => _board;
+    public Player CurrentPlayer { get; private set; } = Player.X;
+
+    public Player? GetWinner() => _board.GetWinner();
+    public bool IsDraw() => _board.IsFull() && GetWinner() == null;
 
     public void Play(Player player, int row, int col)
     {
         if (_isGameOver)
             throw new InvalidOperationException("Game is already over");
 
-        if (_board[row, col] != null)
-            throw new InvalidOperationException("Cell already occupied");
-
         if (player != CurrentPlayer)
             throw new InvalidOperationException("Not this player's turn");
 
-        _board[row, col] = player;
+        _board.Place(player, row, col);
 
-        var winner = GetWinner();
-        var draw = IsDraw();
-
-        if (winner != null || draw)
+        if (_board.GetWinner() != null || _board.IsFull())
         {
             _isGameOver = true;
             return;
@@ -33,43 +29,15 @@ public class Game
 
         CurrentPlayer = CurrentPlayer == Player.X ? Player.O : Player.X;
     }
-    public Player? GetWinner()
+
+    public Player?[,] GetBoard() => GetSnapshot();
+
+    private Player?[,] GetSnapshot()
     {
-        for (int row = 0; row < 3; row++)
-            if (_board[row, 0] != null &&
-                _board[row, 0] == _board[row, 1] &&
-                _board[row, 0] == _board[row, 2])
-                return _board[row, 0];
-        
-        for (int col = 0; col < 3; col++)
-            if (_board[0, col] != null &&
-                _board[0, col] == _board[1, col] &&
-                _board[0, col] == _board[2, col])
-                return _board[0, col];
-        
-        if (_board[0, 0] != null &&
-            _board[0, 0] == _board[1, 1] &&
-            _board[0, 0] == _board[2, 2])
-            return _board[0, 0];
-
-        if (_board[0, 2] != null &&
-            _board[0, 2] == _board[1, 1] &&
-            _board[0, 2] == _board[2, 0])
-            return _board[0, 2];
-
-        return null;
-    }
-
-    public bool IsDraw()
-    {
-        if (GetWinner() != null)
-            return false;
-
-        for (int row = 0; row < 3; row++)
-            for (int col = 0; col < 3; col++)
-                if (_board[row, col] == null)
-                    return false;
-
-        return true;
+        var snapshot = new Player?[3, 3];
+        for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            snapshot[i, j] = _board.GetCell(i, j);
+        return snapshot;
     }
 }
