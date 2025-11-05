@@ -91,4 +91,44 @@ public class GameShould
             game.Play(Player.O, 0, 0)
         );
     }
+    
+    [Fact]
+    public void NotAllowPlayingAfterWin()
+    {
+        var game = new Game();
+
+        game.Play(Player.X, 0, 0);
+        game.Play(Player.O, 1, 0);
+        game.Play(Player.X, 0, 1);
+        game.Play(Player.O, 1, 1);
+        game.Play(Player.X, 0, 2); 
+
+        Assert.Equal(Player.X, game.GetWinner());
+
+        Assert.Throws<InvalidOperationException>(() =>
+            game.Play(Player.O, 2, 0)
+        );
+    }
+
+    [Fact]
+    public void NotAllowPlayingAfterDraw()
+    {
+        var game = new Game();
+
+        game.Play(Player.X, 0, 0);
+        game.Play(Player.O, 0, 1);
+        game.Play(Player.X, 0, 2);
+        game.Play(Player.O, 1, 1);
+        game.Play(Player.X, 1, 0);
+        game.Play(Player.O, 1, 2);
+        game.Play(Player.X, 2, 1);
+        game.Play(Player.O, 2, 0);
+        game.Play(Player.X, 2, 2);
+
+        Assert.True(game.IsDraw());
+        
+        Assert.Throws<InvalidOperationException>(() =>
+                game.Play(Player.O, 1, 1)
+        );
+    }
 }

@@ -5,23 +5,34 @@ public class Game
 {
     private readonly Player?[,] _board = new Player?[3, 3];
     public Player CurrentPlayer { get; private set; } = Player.X;
+    private bool _isGameOver;
 
     public Player?[,] GetBoard() => _board;
 
     public void Play(Player player, int row, int col)
     {
-        if (player != CurrentPlayer)
-            throw new InvalidOperationException("Not this player's turn");
+        if (_isGameOver)
+            throw new InvalidOperationException("Game is already over");
 
         if (_board[row, col] != null)
             throw new InvalidOperationException("Cell already occupied");
 
-        _board[row, col] = player;
-        
-        if (GetWinner() == null && !IsDraw())
-            CurrentPlayer = CurrentPlayer == Player.X ? Player.O : Player.X;
-    }
+        if (player != CurrentPlayer)
+            throw new InvalidOperationException("Not this player's turn");
 
+        _board[row, col] = player;
+
+        var winner = GetWinner();
+        var draw = IsDraw();
+
+        if (winner != null || draw)
+        {
+            _isGameOver = true;
+            return;
+        }
+
+        CurrentPlayer = CurrentPlayer == Player.X ? Player.O : Player.X;
+    }
     public Player? GetWinner()
     {
         for (int row = 0; row < 3; row++)
@@ -55,9 +66,9 @@ public class Game
             return false;
 
         for (int row = 0; row < 3; row++)
-        for (int col = 0; col < 3; col++)
-            if (_board[row, col] == null)
-                return false;
+            for (int col = 0; col < 3; col++)
+                if (_board[row, col] == null)
+                    return false;
 
         return true;
     }
