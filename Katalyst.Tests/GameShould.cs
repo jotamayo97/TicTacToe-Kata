@@ -49,4 +49,22 @@ public class GameShould
 
         Assert.Equal(Player.X, game.GetWinner());
     }
+
+    [Fact]
+    public void DetectDraw_WhenAllCellsFilledWithoutWinner()
+    {
+        var game = new Game();
+
+        game.Play(Player.X, 0, 0);
+        game.Play(Player.O, 0, 1);
+        game.Play(Player.X, 0, 2);
+        game.Play(Player.X, 1, 0);
+        game.Play(Player.O, 1, 1);
+        game.Play(Player.X, 1, 2);
+        game.Play(Player.O, 2, 0);
+        game.Play(Player.X, 2, 1);
+        game.Play(Player.O, 2, 2);
+
+        Assert.True(game.IsDraw());
+    }
 }

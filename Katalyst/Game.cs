@@ -21,7 +21,7 @@ public class Game
     {
         int[,] winningPositions =
         {
-            { 0, 1, 2 }, 
+            { 0, 1, 2 },
             { 3, 4, 5 },
             { 6, 7, 8 },
             { 0, 3, 6 },
@@ -46,5 +46,10 @@ public class Game
         }
 
         return null;
+    }
+
+    public bool IsDraw()
+    {
+        return GetWinner() == null && _board.All(cell => cell != null);
     }
 }
