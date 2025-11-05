@@ -3,53 +3,55 @@
 
 public class Game
 {
-    private readonly Player?[] _board = new Player?[9];
+    private readonly Player?[,] _board = new Player?[3, 3];
 
-    public Player?[] GetBoard() => _board;
+    public Player?[,] GetBoard() => _board;
 
     public void Play(Player player, int row, int col)
     {
-        var index = row * 3 + col;
-
-        if (_board[index] != null)
+        if (_board[row, col] != null)
             throw new InvalidOperationException("Cell already occupied");
 
-        _board[index] = player;
+        _board[row, col] = player;
     }
 
     public Player? GetWinner()
     {
-        int[,] winningPositions =
-        {
-            { 0, 1, 2 },
-            { 3, 4, 5 },
-            { 6, 7, 8 },
-            { 0, 3, 6 },
-            { 1, 4, 7 },
-            { 2, 5, 8 },
-            { 0, 4, 8 },
-            { 2, 4, 6 }
-        };
+        for (int row = 0; row < 3; row++)
+            if (_board[row, 0] != null &&
+                _board[row, 0] == _board[row, 1] &&
+                _board[row, 0] == _board[row, 2])
+                return _board[row, 0];
+        
+        for (int col = 0; col < 3; col++)
+            if (_board[0, col] != null &&
+                _board[0, col] == _board[1, col] &&
+                _board[0, col] == _board[2, col])
+                return _board[0, col];
+        
+        if (_board[0, 0] != null &&
+            _board[0, 0] == _board[1, 1] &&
+            _board[0, 0] == _board[2, 2])
+            return _board[0, 0];
 
-        for (int i = 0; i < winningPositions.GetLength(0); i++)
-        {
-            var a = winningPositions[i, 0];
-            var b = winningPositions[i, 1];
-            var c = winningPositions[i, 2];
-
-            if (_board[a] != null &&
-                _board[a] == _board[b] &&
-                _board[a] == _board[c])
-            {
-                return _board[a];
-            }
-        }
+        if (_board[0, 2] != null &&
+            _board[0, 2] == _board[1, 1] &&
+            _board[0, 2] == _board[2, 0])
+            return _board[0, 2];
 
         return null;
     }
 
     public bool IsDraw()
     {
-        return GetWinner() == null && _board.All(cell => cell != null);
+        if (GetWinner() != null)
+            return false;
+
+        for (int row = 0; row < 3; row++)
+        for (int col = 0; col < 3; col++)
+            if (_board[row, col] == null)
+                return false;
+
+        return true;
     }
 }

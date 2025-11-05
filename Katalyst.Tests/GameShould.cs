@@ -10,10 +10,10 @@ public class GameShould
     public void NewGame_ShouldStartWithEmptyBoard()
     {
         var game = new Game();
-
         var board = game.GetBoard();
 
-        Assert.All(board, cell => Assert.Null(cell));
+        foreach (var cell in board)
+            Assert.Null(cell);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class GameShould
 
         var board = game.GetBoard();
 
-        Assert.Equal(Player.X, board[0]);
+        Assert.Equal(Player.X, board[0, 0]);
     }
 
     [Fact]
